@@ -27,8 +27,8 @@ const FilterTag = styled(StyledTag)`
   min-width: 180px;
 `;
 
-export const recurringContributionsPageQuery = gqlV2/* GraphQL */ `
-  query RecurringContributions($collectiveSlug: String) {
+const recurringContributionsPageQuery = gqlV2/* GraphQL */ `
+  query RecurringContributionsPage($collectiveSlug: String) {
     account(slug: $collectiveSlug) {
       id
       slug

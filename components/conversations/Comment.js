@@ -25,7 +25,7 @@ import StyledButton from '../StyledButton';
 import StyledHr from '../StyledHr';
 import { P } from '../Text';
 
-import { CommentFieldsFragment } from './graphql';
+import { commentFieldsFragment } from './graphql';
 
 const CommentBtn = styled(StyledButton)`
   padding: 3px 5px;
@@ -72,21 +72,21 @@ const ActionButton = styled(StyledButton)`
   }
 `;
 
-const deleteCommentMutation = gqlV2`
-  mutation deleteComment($id: String!) {
+const deleteCommentMutation = gqlV2/* GraphQL */ `
+  mutation DeleteComment($id: String!) {
     deleteComment(id: $id) {
       id
     }
   }
 `;
 
-const editCommentMutation = gqlV2`
-  mutation editComment($comment: CommentUpdateInput!) {
+const editCommentMutation = gqlV2/* GraphQL */ `
+  mutation EditComment($comment: CommentUpdateInput!) {
     editComment(comment: $comment) {
       ...CommentFields
     }
   }
-  ${CommentFieldsFragment}
+  ${commentFieldsFragment}
 `;
 
 const mutationOptions = { context: API_V2_CONTEXT };

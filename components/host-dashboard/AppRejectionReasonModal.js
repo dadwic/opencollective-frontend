@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { getHostPendingApplicationsQuery } from '../../lib/graphql/queries';
+import { hostPendingApplicationsQuery } from '../../lib/graphql/queries';
 
 import Container from '../Container';
 import MessageBox from '../MessageBox';
@@ -12,8 +12,8 @@ import StyledButton from '../StyledButton';
 import Modal, { ModalBody, ModalFooter, ModalHeader } from '../StyledModal';
 import StyledTextarea from '../StyledTextarea';
 
-const rejectCollectiveQuery = gql`
-  mutation rejectCollective($id: Int!, $rejectionReason: String) {
+const rejectCollectiveMutation = gql`
+  mutation RejectCollective($id: Int!, $rejectionReason: String) {
     rejectCollective(id: $id, rejectionReason: $rejectionReason) {
       id
     }
@@ -29,7 +29,7 @@ const messages = defineMessages({
 
 const AppRejectionReasonModal = ({ show, onClose, collectiveId, hostCollectiveSlug }) => {
   const [rejectionReason, setRejectionReason] = useState('');
-  const [rejectCollective, { loading, error }] = useMutation(rejectCollectiveQuery);
+  const [rejectCollective, { loading, error }] = useMutation(rejectCollectiveMutation);
   const intl = useIntl();
 
   return (
@@ -67,7 +67,7 @@ const AppRejectionReasonModal = ({ show, onClose, collectiveId, hostCollectiveSl
             onClick={async () => {
               await rejectCollective({
                 variables: { id: collectiveId, rejectionReason },
-                refetchQueries: [{ query: getHostPendingApplicationsQuery, variables: { hostCollectiveSlug } }],
+                refetchQueries: [{ query: hostPendingApplicationsQuery, variables: { hostCollectiveSlug } }],
                 awaitRefetchQueries: true,
                 ignoreResults: true,
               });

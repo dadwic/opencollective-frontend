@@ -1274,7 +1274,7 @@ class CreateOrderPage extends React.Component {
   }
 }
 
-const SubmitOrderFragment = gql`
+const submitOrderFragment = gql`
   fragment SubmitOrderFragment on OrderType {
     id
     idV2
@@ -1291,59 +1291,56 @@ const SubmitOrderFragment = gql`
   }
 `;
 
-export const addCreateOrderMutation = graphql(
-  gql`
-    mutation createOrder($order: OrderInputType!) {
-      createOrder(order: $order) {
-        ...SubmitOrderFragment
-      }
+const createOrderMutation = gql`
+  mutation CreateOrder($order: OrderInputType!) {
+    createOrder(order: $order) {
+      ...SubmitOrderFragment
     }
-    ${SubmitOrderFragment}
-  `,
-  {
-    props: ({ mutate }) => ({
-      createOrder: order => mutate({ variables: { order } }),
-    }),
-  },
-);
+  }
+  ${submitOrderFragment}
+`;
 
-export const addConfirmOrderMutation = graphql(
-  gql`
-    mutation confirmOrder($order: ConfirmOrderInputType!) {
-      confirmOrder(order: $order) {
-        ...SubmitOrderFragment
-      }
+const addCreateOrderMutation = graphql(createOrderMutation, {
+  props: ({ mutate }) => ({
+    createOrder: order => mutate({ variables: { order } }),
+  }),
+});
+
+const confirmOrderMutation = gql`
+  mutation ConfirmOrder($order: ConfirmOrderInputType!) {
+    confirmOrder(order: $order) {
+      ...SubmitOrderFragment
     }
-    ${SubmitOrderFragment}
-  `,
-  {
-    props: ({ mutate }) => ({
-      confirmOrder: order => mutate({ variables: { order } }),
-    }),
-  },
-);
+  }
+  ${submitOrderFragment}
+`;
 
-const addCompletePledgeMutation = graphql(
-  gql`
-    mutation completePledge($order: OrderInputType!) {
-      updateOrder(order: $order) {
-        ...SubmitOrderFragment
-      }
+const addConfirmOrderMutation = graphql(confirmOrderMutation, {
+  props: ({ mutate }) => ({
+    confirmOrder: order => mutate({ variables: { order } }),
+  }),
+});
+
+const completePledgeMutation = gql`
+  mutation CompletePledge($order: OrderInputType!) {
+    updateOrder(order: $order) {
+      ...SubmitOrderFragment
     }
-    ${SubmitOrderFragment}
-  `,
-  {
-    props: ({ mutate }) => ({
-      completePledge: order => mutate({ variables: { order } }),
-    }),
-  },
-);
+  }
+  ${submitOrderFragment}
+`;
 
-const addGraphQL = compose(
+const addCompletePledgeMutation = graphql(completePledgeMutation, {
+  props: ({ mutate }) => ({
+    completePledge: order => mutate({ variables: { order } }),
+  }),
+});
+
+const addGraphql = compose(
   addCreateCollectiveMutation,
   addCreateOrderMutation,
   addConfirmOrderMutation,
   addCompletePledgeMutation,
 );
 
-export default injectIntl(addGraphQL(withUser(withStripeLoader(CreateOrderPage))));
+export default injectIntl(addGraphql(withUser(withStripeLoader(CreateOrderPage))));

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { graphql } from '@apollo/react-hoc';
 import { cloneDeep } from 'lodash';
 
-import { getSubscriptionsQuery } from '../lib/graphql/queries';
+import { subscriptionsQuery } from '../lib/graphql/queries';
 
 import Error from './Error';
 import Subscriptions from './Subscriptions';
@@ -41,7 +41,7 @@ class SubscriptionsWithData extends React.Component {
   }
 }
 
-export const addSubscriptionsData = graphql(getSubscriptionsQuery, {
+export const addSubscriptionsData = graphql(subscriptionsQuery, {
   options: props => ({
     variables: {
       slug: props.slug,

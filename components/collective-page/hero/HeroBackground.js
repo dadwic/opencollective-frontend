@@ -14,8 +14,7 @@ import LoadingPlaceholder from '../../LoadingPlaceholder';
 import MessageBox from '../../MessageBox';
 import StyledButton from '../../StyledButton';
 import { Span } from '../../Text';
-// Local imports
-import { EditCollectiveBackgroundMutation } from '../graphql/mutations';
+import { editCollectiveBackgroundMutation } from '../graphql/mutations';
 
 import HeroBackgroundMask from '../images/HeroBackgroundMask.svg';
 
@@ -129,7 +128,7 @@ const HeroBackground = ({ collective, isEditing, onEditCancel }) => {
       )}
     </StyledBackground>
   ) : (
-    <Mutation mutation={EditCollectiveBackgroundMutation}>
+    <Mutation mutation={editCollectiveBackgroundMutation}>
       {editBackground => (
         <StyledBackground
           data-cy="collective-background-image-styledBackground"

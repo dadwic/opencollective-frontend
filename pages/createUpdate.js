@@ -155,7 +155,7 @@ class CreateUpdatePage extends React.Component {
   }
 }
 
-const createUpdateQuery = gql`
+const createUpdateMutation = gql`
   mutation createUpdate($update: UpdateInputType!) {
     createUpdate(update: $update) {
       id
@@ -185,7 +185,7 @@ const createUpdateQuery = gql`
   }
 `;
 
-const addMutation = graphql(createUpdateQuery, {
+const addCreateUpdateMutation = graphql(createUpdateMutation, {
   props: ({ mutate }) => ({
     createUpdate: async update => {
       return await mutate({ variables: { update } });
@@ -193,6 +193,6 @@ const addMutation = graphql(createUpdateQuery, {
   }),
 });
 
-const addGraphQL = compose(addCollectiveCoverData, addMutation);
+const addGraphql = compose(addCollectiveCoverData, addCreateUpdateMutation);
 
-export default withUser(addGraphQL(CreateUpdatePage));
+export default withUser(addGraphql(CreateUpdatePage));

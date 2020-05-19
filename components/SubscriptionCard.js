@@ -10,7 +10,7 @@ import { defaultBackgroundImage } from '../lib/constants/collectives';
 import colors from '../lib/constants/colors';
 import { getCurrencySymbol } from '../lib/currency-utils';
 import { getErrorFromGraphqlException } from '../lib/errors';
-import { getSubscriptionsQuery } from '../lib/graphql/queries';
+import { subscriptionsQuery } from '../lib/graphql/queries';
 import { imagePreview } from '../lib/image-utils';
 import { getStripe } from '../lib/stripe';
 import { firstSentence } from '../lib/utils';
@@ -622,8 +622,8 @@ class SubscriptionCard extends React.Component {
   }
 }
 
-const updateSubscriptionQuery = gql`
-  mutation updateSubscription($id: Int!, $paymentMethod: PaymentMethodInputType, $amount: Int) {
+const updateSubscriptionMutation = gql`
+  mutation UpdateSubscription($id: Int!, $paymentMethod: PaymentMethodInputType, $amount: Int) {
     updateSubscription(id: $id, paymentMethod: $paymentMethod, amount: $amount) {
       id
       currency
@@ -669,7 +669,7 @@ const updateSubscriptionQuery = gql`
   }
 `;
 
-const addMutation = graphql(updateSubscriptionQuery, {
+const addUpdateSubscriptionMutation = graphql(updateSubscriptionMutation, {
   props: ({ ownProps, mutate }) => ({
     updateSubscription: async (id, paymentMethod, amount) => {
       return await mutate({
@@ -679,7 +679,7 @@ const addMutation = graphql(updateSubscriptionQuery, {
         // of all subscriptions, so it can be immediately selected.
         update: (proxy, { data: { updateSubscription } }) => {
           const data = proxy.readQuery({
-            query: getSubscriptionsQuery,
+            query: subscriptionsQuery,
             variables: { slug: ownProps.slug },
           });
 
@@ -705,11 +705,11 @@ const addMutation = graphql(updateSubscriptionQuery, {
           }
 
           // write data back for the query
-          proxy.writeQuery({ query: getSubscriptionsQuery, data });
+          proxy.writeQuery({ query: subscriptionsQuery, data });
         },
       });
     },
   }),
 });
 
-export default addMutation(injectIntl(SubscriptionCard));
+export default injectIntl(addUpdateSubscriptionMutation(SubscriptionCard));

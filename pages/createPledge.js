@@ -10,7 +10,7 @@ import styled from 'styled-components';
 
 import { defaultImage } from '../lib/constants/collectives';
 import { getErrorFromGraphqlException } from '../lib/errors';
-import { getCollectiveQuery } from '../lib/graphql/queries';
+import { legacyCollectiveQuery } from '../lib/graphql/queries';
 import { imagePreview } from '../lib/image-utils';
 import { compose } from '../lib/utils';
 import { Router } from '../server/pages';
@@ -672,72 +672,70 @@ class CreatePledgePage extends React.Component {
   }
 }
 
-const addCollectiveData = graphql(
-  gql`
-    query CreatePledgeQuery($slug: String!) {
-      Collective(slug: $slug) {
-        currency
+const createPledgePageQuery = gql`
+  query CreatePledgePage($slug: String!) {
+    Collective(slug: $slug) {
+      currency
+      id
+      name
+      website
+      githubHandle
+      pledges: orders(status: PENDING) {
         id
-        name
-        website
-        githubHandle
-        pledges: orders(status: PENDING) {
-          id
-          totalAmount
-          fromCollective {
-            id
-            imageUrl(height: 128)
-            slug
-            name
-            type
-          }
-        }
-      }
-    }
-  `,
-  {
-    skip: props => !props.slug,
-  },
-);
-
-export const addCreatePledgeMutation = graphql(
-  gql`
-    mutation createOrder($order: OrderInputType!) {
-      createOrder(order: $order) {
-        id
-        createdAt
-        status
-        createdByUser {
-          id
-        }
+        totalAmount
         fromCollective {
           id
+          imageUrl(height: 128)
           slug
-        }
-        collective {
-          id
-          slug
-        }
-        transactions(type: "CREDIT") {
-          id
-          uuid
+          name
+          type
         }
       }
     }
-  `,
-  {
-    props: ({ mutate }) => ({
-      createPledge: async (order, collectiveSlug) => {
-        return await mutate({
-          variables: { order },
-          refetchQueries: !collectiveSlug ? [] : [{ query: getCollectiveQuery, variables: { slug: collectiveSlug } }],
-        });
-      },
-    }),
-  },
-);
+  }
+`;
 
-const addGraphQL = compose(addCollectiveData, addCreatePledgeMutation);
+const addCreatePledgePageData = graphql(createPledgePageQuery, {
+  skip: props => !props.slug,
+});
+
+const createPledgeMutation = gql`
+  mutation createPledge($order: OrderInputType!) {
+    createOrder(order: $order) {
+      id
+      createdAt
+      status
+      createdByUser {
+        id
+      }
+      fromCollective {
+        id
+        slug
+      }
+      collective {
+        id
+        slug
+      }
+      transactions(type: "CREDIT") {
+        id
+        uuid
+      }
+    }
+  }
+`;
+
+export const addCreatePledgeMutation = graphql(createPledgeMutation, {
+  props: ({ mutate }) => ({
+    createPledge: async (order, collectiveSlug) => {
+      return await mutate({
+        variables: { order },
+        refetchQueries: !collectiveSlug ? [] : [{ query: legacyCollectiveQuery, variables: { slug: collectiveSlug } }],
+      });
+    },
+  }),
+});
+
+const addGraphql = compose(addCreatePledgePageData, addCreatePledgeMutation);
 
 export { CreatePledgePage as MockCreatePledgePage };
-export default injectIntl(withUser(addGraphQL(CreatePledgePage)));
+export default injectIntl(withUser(addGraphql(CreatePledgePage)));

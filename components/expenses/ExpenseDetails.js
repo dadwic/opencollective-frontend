@@ -464,7 +464,7 @@ class ExpenseDetails extends React.Component {
   }
 }
 
-const getExpenseQuery = gql`
+const ExpenseQuery = gql`
   query Expense($id: Int!) {
     Expense(id: $id) {
       id
@@ -540,7 +540,7 @@ export const addGetExpense = component => {
     return component;
   }
 
-  return graphql(getExpenseQuery, {
+  return graphql(ExpenseQuery, {
     options: props => ({
       variables: {
         id: props.expense.id,

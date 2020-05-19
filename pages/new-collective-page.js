@@ -9,7 +9,7 @@ import { generateNotFoundError } from '../lib/errors';
 
 import CollectivePage from '../components/collective-page';
 import CollectiveNotificationBar from '../components/collective-page/CollectiveNotificationBar';
-import { getCollectivePageQuery } from '../components/collective-page/graphql/queries';
+import { collectivePageQuery } from '../components/collective-page/graphql/queries';
 import CollectiveThemeProvider from '../components/CollectiveThemeProvider';
 import Container from '../components/Container';
 import { MAX_CONTRIBUTORS_PER_CONTRIBUTE_CARD } from '../components/contribute-cards/Contribute';
@@ -216,10 +216,10 @@ export const getCollectivePageQueryVariables = collectiveSlug => {
   };
 };
 
-const getCollective = graphql(getCollectivePageQuery, {
+const addCollectivePageData = graphql(collectivePageQuery, {
   options: props => ({
     variables: getCollectivePageQueryVariables(props.slug),
   }),
 });
 
-export default withUser(getCollective(NewCollectivePage));
+export default withUser(addCollectivePageData(NewCollectivePage));

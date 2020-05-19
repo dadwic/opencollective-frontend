@@ -188,13 +188,8 @@ class SignInOrJoinFree extends React.Component {
   }
 }
 
-const createUserQuery = gql`
-  mutation createUser(
-    $user: UserInputType!
-    $organization: CollectiveInputType
-    $redirect: String
-    $websiteUrl: String
-  ) {
+const signupMutation = gql`
+  mutation Signup($user: UserInputType!, $organization: CollectiveInputType, $redirect: String, $websiteUrl: String) {
     createUser(user: $user, organization: $organization, redirect: $redirect, websiteUrl: $websiteUrl) {
       user {
         id
@@ -209,6 +204,6 @@ const createUserQuery = gql`
   }
 `;
 
-const addCreateUserMutation = graphql(createUserQuery, { name: 'createUser' });
+const addSignupMutation = graphql(signupMutation, { name: 'createUser' });
 
-export default addCreateUserMutation(SignInOrJoinFree);
+export default addSignupMutation(SignInOrJoinFree);

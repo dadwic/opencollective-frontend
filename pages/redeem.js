@@ -266,28 +266,27 @@ class RedeemPage extends React.Component {
   }
 }
 
-const getPageData = graphql(
-  gql`
-    query RedeemPageData($collectiveSlug: String!) {
-      Collective(slug: $collectiveSlug) {
-        id
-        name
-        type
-        slug
-        imageUrl
-        backgroundImageUrl
-        description
-        settings
-      }
+const redeemPageQuery = gql`
+  query RedeemPage($collectiveSlug: String!) {
+    Collective(slug: $collectiveSlug) {
+      id
+      name
+      type
+      slug
+      imageUrl
+      backgroundImageUrl
+      description
+      settings
     }
-  `,
-  {
-    skip: props => !props.collectiveSlug,
-  },
-);
+  }
+`;
 
-const redeemMutation = gql`
-  mutation claimPaymentMethod($code: String!, $user: UserInputType) {
+const addRedeemPageData = graphql(redeemPageQuery, {
+  skip: props => !props.collectiveSlug,
+});
+
+const redeemPaymentMethodMutation = gql`
+  mutation RedeemPaymentMethod($code: String!, $user: UserInputType) {
     claimPaymentMethod(code: $code, user: $user) {
       id
       description
@@ -295,7 +294,7 @@ const redeemMutation = gql`
   }
 `;
 
-const addMutation = graphql(redeemMutation, {
+const addRedeemPaymentMethodMutation = graphql(redeemPaymentMethodMutation, {
   props: ({ mutate }) => ({
     claimPaymentMethod: async (code, user) => {
       return await mutate({ variables: { code, user } });
@@ -303,4 +302,4 @@ const addMutation = graphql(redeemMutation, {
   }),
 });
 
-export default injectIntl(withUser(addMutation(getPageData(RedeemPage))));
+export default injectIntl(withUser(addRedeemPaymentMethodMutation(addRedeemPageData(RedeemPage))));

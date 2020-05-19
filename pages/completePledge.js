@@ -136,8 +136,8 @@ class CompletePledgePage extends React.Component {
   }
 }
 
-const addOrderData = graphql(gql`
-  query getOrder($orderId: Int!) {
+const completePledgePageQuery = gql`
+  query CompletePledgePage($orderId: Int!) {
     Order(id: $orderId) {
       id
       interval
@@ -184,6 +184,8 @@ const addOrderData = graphql(gql`
       }
     }
   }
-`);
+`;
 
-export default addOrderData(injectIntl(CompletePledgePage));
+const addCompletePledgePageData = graphql(completePledgePageQuery);
+
+export default injectIntl(addCompletePledgePageData(CompletePledgePage));

@@ -1,6 +1,6 @@
 import 'cypress-file-upload';
 
-import { getLoggedInUserQuery } from '../../../lib/graphql/queries';
+import { loggedInUserQuery } from '../../../lib/graphql/queries';
 
 import { CreditCards } from '../../stripe-helpers';
 
@@ -369,7 +369,7 @@ function graphqlQuery(token, body) {
 function getLoggedInUserFromToken(token) {
   return graphqlQuery(token, {
     operationName: 'LoggedInUser',
-    query: getLoggedInUserQuery.loc.source.body,
+    query: loggedInUserQuery.loc.source.body,
   }).then(({ body }) => {
     return body.data.LoggedInUser;
   });

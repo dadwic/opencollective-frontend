@@ -47,8 +47,8 @@ class CancelSubscriptionBtn extends React.Component {
   }
 }
 
-const cancelSubscriptionQuery = gql`
-  mutation cancelSubscription($id: Int!) {
+const cancelSubscriptionMutation = gql`
+  mutation CancelSubscription($id: Int!) {
     cancelSubscription(id: $id) {
       id
       isSubscriptionActive
@@ -57,7 +57,7 @@ const cancelSubscriptionQuery = gql`
   }
 `;
 
-const addMutation = graphql(cancelSubscriptionQuery, {
+const addCancelSubscriptionMutation = graphql(cancelSubscriptionMutation, {
   props: ({ mutate }) => ({
     cancelSubscription: async id => {
       return await mutate({ variables: { id } });
@@ -65,4 +65,4 @@ const addMutation = graphql(cancelSubscriptionQuery, {
   }),
 });
 
-export default addMutation(CancelSubscriptionBtn);
+export default addCancelSubscriptionMutation(CancelSubscriptionBtn);

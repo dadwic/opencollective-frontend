@@ -44,30 +44,30 @@ const FormFieldsContainer = styled(Flex)`
   text-transform: capitalize;
 `;
 
-const requiredFieldsQuery = gqlV2`
-  query Host($slug: String, $currency: String!) {
+const requiredFieldsQuery = gqlV2/* GraphQL */ `
+  query PayoutBankInformationRequiredFields($slug: String, $currency: String!) {
     host(slug: $slug) {
-        transferwise {
-          requiredFields(currency: $currency) {
-            type
-            title
-            fields {
+      transferwise {
+        requiredFields(currency: $currency) {
+          type
+          title
+          fields {
+            name
+            group {
+              key
               name
-              group {
+              type
+              required
+              example
+              validationRegexp
+              valuesAllowed {
                 key
                 name
-                type
-                required
-                example
-                validationRegexp
-                valuesAllowed {
-                  key
-                  name
-                }
               }
             }
           }
         }
+      }
     }
   }
 `;
@@ -206,8 +206,8 @@ RequiredFields.propTypes = {
   getFieldName: PropTypes.func.isRequired,
 };
 
-const availableCurrenciesQuery = gqlV2`
-  query Host($slug: String) {
+const availableCurrenciesQuery = gqlV2/* GraphQL */ `
+  query PayoutBankInformationAvailableCurrencies($slug: String) {
     host(slug: $slug) {
       slug
       transferwise {

@@ -4,7 +4,7 @@ import { graphql } from '@apollo/react-hoc';
 import gql from 'graphql-tag';
 import { FormattedMessage } from 'react-intl';
 
-import { getTransactionsQuery, transactionFields } from '../../lib/graphql/queries';
+import { transactionFields, transactionsQuery } from '../../lib/graphql/queries';
 
 import SmallButton from '../SmallButton';
 
@@ -169,7 +169,7 @@ const addMutation = graphql(refundTransactionQuery, {
 
           // Retrieve the query from the cache
           const data = proxy.readQuery({
-            query: getTransactionsQuery,
+            query: transactionsQuery,
             variables,
           });
 
@@ -177,7 +177,7 @@ const addMutation = graphql(refundTransactionQuery, {
           data.allTransactions.unshift(refundTransaction.refundTransaction);
 
           // write data back for the query
-          proxy.writeQuery({ query: getTransactionsQuery, variables, data });
+          proxy.writeQuery({ query: transactionsQuery, variables, data });
         },
       }),
   }),

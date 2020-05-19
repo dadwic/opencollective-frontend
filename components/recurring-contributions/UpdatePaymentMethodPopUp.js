@@ -51,8 +51,8 @@ const messages = defineMessages({
   },
 });
 
-const getPaymentMethodsQuery = gqlV2`
-  query UpdatePaymentMethodPopUpQuery($collectiveSlug: String) {
+const paymentMethodsQuery = gqlV2`
+  query RecurringContributionsPaymentMethods($collectiveSlug: String) {
     account(slug: $collectiveSlug) {
       id
       paymentMethods(types: ["creditcard", "virtualcard", "prepaid"]) {
@@ -74,7 +74,10 @@ const getPaymentMethodsQuery = gqlV2`
 `;
 
 const updatePaymentMethodMutation = gqlV2/* GraphQL */ `
-  mutation updatePaymentMethod($order: OrderReferenceInput!, $paymentMethod: PaymentMethodReferenceInput!) {
+  mutation RecurringContributionsUpdatePaymentMethod(
+    $order: OrderReferenceInput!
+    $paymentMethod: PaymentMethodReferenceInput!
+  ) {
     updateOrder(order: $order, paymentMethod: $paymentMethod) {
       id
       paymentMethod {
@@ -85,7 +88,10 @@ const updatePaymentMethodMutation = gqlV2/* GraphQL */ `
 `;
 
 const addPaymentMethodMutation = gqlV2/* GraphQL */ `
-  mutation addPaymentMethod($paymentMethod: PaymentMethodCreateInput!, $account: AccountReferenceInput!) {
+  mutation RecurringContributionsAddPaymentMethod(
+    $paymentMethod: PaymentMethodCreateInput!
+    $account: AccountReferenceInput!
+  ) {
     addStripeCreditCard(paymentMethod: $paymentMethod, account: $account) {
       id
       name
@@ -115,7 +121,7 @@ const UpdatePaymentMethodPopUp = ({
   const [addedPaymentMethod, setAddedPaymentMethod] = useState(null);
 
   // GraphQL mutations and queries
-  const { data } = useQuery(getPaymentMethodsQuery, {
+  const { data } = useQuery(paymentMethodsQuery, {
     variables: {
       collectiveSlug: router.query.collectiveSlug,
     },
@@ -282,7 +288,7 @@ const UpdatePaymentMethodPopUp = ({
                     variables: { paymentMethod: newPaymentMethod, account: { id: account.id } },
                     refetchQueries: [
                       {
-                        query: getPaymentMethodsQuery,
+                        query: paymentMethodsQuery,
                         variables: { collectiveSlug: router.query.collectiveSlug },
                         context: API_V2_CONTEXT,
                       },

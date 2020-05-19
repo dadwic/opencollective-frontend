@@ -344,8 +344,8 @@ class ClaimCollectivePage extends React.Component {
   }
 }
 
-const addPledgesData = graphql(gql`
-  query collectivePledges($slug: String) {
+const claimCollectivePageQuery = gql`
+  query ClaimCollectivePage($slug: String) {
     Collective(slug: $slug) {
       id
       name
@@ -353,25 +353,26 @@ const addPledgesData = graphql(gql`
       githubHandle
     }
   }
-`);
+`;
 
-const addClaimCollectiveMutation = graphql(
-  gql`
-    mutation claimCollective($id: Int!) {
-      claimCollective(id: $id) {
-        id
-        slug
-      }
+const addClaimCollectivePageData = graphql(claimCollectivePageQuery);
+
+const claimCollectiveMutation = gql`
+  mutation ClaimCollective($id: Int!) {
+    claimCollective(id: $id) {
+      id
+      slug
     }
-  `,
-  {
-    props: ({ mutate }) => ({
-      claimCollective: id => mutate({ variables: { id } }),
-    }),
-  },
-);
+  }
+`;
 
-const addGraphQL = compose(addPledgesData, addClaimCollectiveMutation);
+const addClaimCollectiveMutation = graphql(claimCollectiveMutation, {
+  props: ({ mutate }) => ({
+    claimCollective: id => mutate({ variables: { id } }),
+  }),
+});
+
+const addGraphql = compose(addClaimCollectivePageData, addClaimCollectiveMutation);
 
 export { ClaimCollectivePage as MockClaimCollectivePage };
-export default withUser(addGraphQL(ClaimCollectivePage));
+export default withUser(addGraphql(ClaimCollectivePage));

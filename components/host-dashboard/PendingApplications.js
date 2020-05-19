@@ -9,7 +9,7 @@ import { get } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 
 import { getErrorFromGraphqlException } from '../../lib/errors';
-import { getHostPendingApplicationsQuery } from '../../lib/graphql/queries';
+import { hostPendingApplicationsQuery } from '../../lib/graphql/queries';
 
 import Avatar from '../Avatar';
 import Container from '../Container';
@@ -26,8 +26,8 @@ import { withUser } from '../UserProvider';
 
 import AppRejectionReasonModal from './AppRejectionReasonModal';
 
-const ApproveCollectiveMutation = gql`
-  mutation approveCollective($id: Int!) {
+const approveCollectiveMutation = gql`
+  mutation ApproveCollective($id: Int!) {
     approveCollective(id: $id) {
       id
       isActive
@@ -152,7 +152,7 @@ class HostPendingApplications extends React.Component {
                 </Box>
               ) : (
                 <Fragment>
-                  <Mutation mutation={ApproveCollectiveMutation}>
+                  <Mutation mutation={approveCollectiveMutation}>
                     {(approveCollective, { loading }) => (
                       <StyledButton
                         m={1}
@@ -205,4 +205,6 @@ class HostPendingApplications extends React.Component {
   }
 }
 
-export default withUser(graphql(getHostPendingApplicationsQuery)(HostPendingApplications));
+const addHostPendingApplicationsData = graphql(hostPendingApplicationsQuery);
+
+export default withUser(addHostPendingApplicationsData(HostPendingApplications));

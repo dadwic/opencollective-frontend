@@ -312,7 +312,7 @@ class StyledUpdate extends Component {
 }
 
 const editUpdateQuery = gql`
-  mutation editUpdate($update: UpdateAttributesInputType!) {
+  mutation EditUpdate($update: UpdateAttributesInputType!) {
     editUpdate(update: $update) {
       id
       updatedAt
@@ -326,7 +326,7 @@ const editUpdateQuery = gql`
 `;
 
 const deleteUpdateQuery = gql`
-  mutation deleteUpdate($id: Int!) {
+  mutation DeleteUpdate($id: Int!) {
     deleteUpdate(id: $id) {
       id
     }
