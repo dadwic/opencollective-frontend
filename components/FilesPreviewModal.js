@@ -98,7 +98,7 @@ export default class FilesPreviewModal extends React.Component {
           <FormattedMessage id="FilesPreviewModal.AttachmentPreview" defaultMessage="Attachment preview" />
         </ModalHeader>
         <ModalBody mb={0}>
-          <Flex justifyContent="center">
+          <Flex justifyContent="center" width="100%">
             {hasMultipleFiles && (
               <StyledButton
                 buttonSize="tiny"
